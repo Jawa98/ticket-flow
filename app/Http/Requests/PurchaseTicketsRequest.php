@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Traits\JsonErrors;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateEventRequest extends FormRequest
+class PurchaseTicketsRequest extends FormRequest
 {
     use JsonErrors;
     /**
@@ -24,11 +24,7 @@ class UpdateEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'         => ['nullable', 'string', 'max:255'],
-            'description'  => ['nullable', 'string'],
-            'start_date'   => ['nullable', 'date_format:Y-m-d H:i:s'],
-            'end_date'     => ['nullable', 'date_format:Y-m-d H:i:s', 'after:start_date'],
-            'ticket_count' => ['nullable', 'integer', 'between:1,100'],
+            'tickets_requested'=> ['required', 'integer', 'min:1', 'max:5']
         ];
     }
 }

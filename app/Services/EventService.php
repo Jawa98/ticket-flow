@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Event;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class EventService
@@ -37,6 +38,27 @@ class EventService
     public function deleteEvent(Event $event)
     {
         $event->delete();
+        return;
+    }
+
+    public function purchaseTickets(array $data, Event $event)
+    {
+        $ticketsRequested = $data['tickets_requested'];
+        
+        // Begin a database transaction to ensure data integrity
+        DB::transaction(function () use ($event, $ticketsRequested) 
+        {
+            $event = Event::where('id', $event->id)->lockForUpdate()->first();
+            
+            if ($event->ticket_count < $ticketsRequested) {
+                throw new \Exception('Sorry, the number of tickets you requested is not available.');
+            }
+
+            // Reduce the required number of tickets from the available number
+            $event->ticket_count -= $ticketsRequested;
+            $event->save();
+        });
+
         return;
     }
 }

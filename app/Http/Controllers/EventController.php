@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EventRequest;
+use App\Http\Requests\PurchaseTicketsRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
@@ -47,5 +48,15 @@ class EventController extends Controller
     {
         $this->eventService->deleteEvent($event);
         return $this->success([], 'Deleted successfully!');
+    }
+
+    public function purchaseTickets(PurchaseTicketsRequest $request, Event $event)
+    {
+        try {
+            $this->eventService->purchaseTickets($request->validated(), $event);
+            return $this->success([], 'Tickets purchased successfully!');
+        } catch (\Exception $e) {
+            return $this->error(400, $e->getMessage());
+        }
     }
 }

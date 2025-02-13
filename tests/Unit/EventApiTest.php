@@ -120,4 +120,66 @@ class EventApiTest extends TestCase
 
         $this->assertDatabaseMissing('events', ['id' => $event->id]);
     }
+
+    #[Test]
+    public function it_can_purchase_tickets_successfully()
+    {
+        $event = Event::factory()->create(['ticket_count' => 100]);
+
+        $ticketData = ['tickets_requested' => 3];
+
+        $response = $this->postJson("/api/events/{$event->id}/purchase-tickets", $ticketData);
+
+        $response->assertStatus(200)
+                 ->assertJson(['message' => 'Tickets purchased successfully!']);
+
+        $this->assertDatabaseHas('events', [
+            'id' => $event->id,
+            'ticket_count' => 97
+        ]);
+    }
+
+    #[Test]
+    public function it_cannot_purchase_more_than_five_tickets()
+    {
+        $event = Event::factory()->create(['ticket_count' => 100]);
+
+        $ticketData = ['tickets_requested' => 6];
+
+        $response = $this->postJson("/api/events/{$event->id}/purchase-tickets", $ticketData);
+
+        $response->assertStatus(200)
+                ->assertJsonStructure([
+                    'success',
+                    'data',
+                    'errors' => ['tickets_requested']
+                ]);
+
+        $this->assertDatabaseHas('events', [
+            'id' => $event->id,
+            'ticket_count' => 100
+        ]);
+    }
+
+    #[Test]
+    public function it_cannot_purchase_more_tickets_than_available()
+    {
+        $event = Event::factory()->create(['ticket_count' => 3]);
+
+        $ticketData = ['tickets_requested' => 4];
+
+        $response = $this->postJson("/api/events/{$event->id}/purchase-tickets", $ticketData);
+
+        $response->assertStatus(400)
+                ->assertJson([
+                    'status' => false,
+                    'message' => 'Sorry, the number of tickets you requested is not available.',
+                    'data' => null
+                ]);
+        
+        $this->assertDatabaseHas('events', [
+            'id' => $event->id,
+            'ticket_count' => 3
+        ]);
+    }
 }

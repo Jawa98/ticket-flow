@@ -29,7 +29,7 @@ class EventRequest extends FormRequest
             'description'  => ['required', 'string'],
             'start_date'   => ['required', 'date_format:Y-m-d H:i:s'],
             'end_date'     => ['required', 'date_format:Y-m-d H:i:s', 'after:start_date'],
-            'ticket_count' => ['required', 'integer', 'min:1'],
+            'ticket_count' => ['required', 'integer', 'between:1,100'],
         ]; 
     }
 }
