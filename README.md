@@ -1,66 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ticket Flow System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Description
+The Ticket Flow System is a Laravel-based application designed to manage events and handle ticket purchases efficiently. It provides a basic CRUD API for managing events along with a ticket purchase function that enforces constraints such as purchase limits and available ticket counts. This project emphasizes clean code, scalability, and robust error handling.
 
-## About Laravel
+## Running the Project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 1. Clone the Repository
+- Clone the repository to your local machine:
+    ```bash
+    git clone https://github.com/Jawa98/ticket-flow.git
+### 2. Environment Setup
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Make sure you have [PHP](https://www.php.net/), [Composer](https://getcomposer.org/), and [Laravel](https://laravel.com/docs/8.x) installed on your machine.
+- Create a database in MySQL or any supported database by Laravel.
+- In the project directory, install dependencies with:
+  ```bash
+  composer install
+- Copy the .env.example file to .env:
+  ```bash
+  cp .env.example .env
+- Configure the database settings in .env:
+    ```bash
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=your_database
+    DB_USERNAME=your_username
+    DB_PASSWORD=your_password
+- Generate the application key:
+  ```bash
+  php artisan key:generate
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 3. Run Migrations and Start the Server
+- Run migrations to create the necessary tables:
+  ```bash
+  php artisan migrate
+- Start the local server:
+  ```bash
+  php artisan serve
+- Open your browser at http://localhost:8000.
 
-## Learning Laravel
+### Task Details
+#### 1. Code Structure (40%)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Implement a basic CRUD API for managing "Events" and the ticket purchase logic in a single system.
+- Create a migration for the `events` table with the following columns:
+  - `id` (integer, primary key)
+  - `name` (string)
+  - `description` (text)
+  - `start_date` (datetime)
+  - `end_date` (datetime)
+  - `ticket_count` (integer)
+- Create an Eloquent model for the `Event` entity.
+- Create a controller with these endpoints:
+  - `GET /events` – List all events.
+  - `GET /events/{id}` – Retrieve a single event by its ID.
+  - `POST /events` – Create a new event.
+  - `PUT /events/{id}` – Update an existing event.
+  - `DELETE /events/{id}` – Delete an event.
+- Write unit tests using Laravel's testing suite to ensure all CRUD operations work correctly.
+- Validate input data to ensure correct date formats and that the ticket count is a positive number.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+#### 2. Logical Problem Solving & Algorithm (40%)
+- Develop a function to handle ticket purchases.
+- Implement the following constraints:
+  - A user can purchase a maximum of 5 tickets per transaction.
+  - Each event has a total of 100 tickets available.
+  - Each successful purchase should decrease the available ticket count accordingly.
+- Validate input to ensure that the requested number of tickets does not exceed the allowed limit or the available tickets.
+- Provide error handling with clear messages for scenarios like insufficient tickets.
+- *Extra Challenge:* Ensure the system handles concurrent purchase requests without overselling tickets.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### 3. Code Health & Best Practices (20%)
+- Refactor the following code snippet to improve readability, scalability, and performance, focusing on code readability, error handling, and efficiency.
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Original Code:**
+```php
+public function calculateDiscount($cart) {
+    $total = 0;
+    $discount = 0;
+    foreach($cart as $item) {
+        $total += $item['price'] * $item['quantity'];
+    }
+    if ($total > 100) {
+        $discount = $total * 0.1;
+    } else {
+        $discount = $total * 0.05;
+    }
+    return $total - $discount;
+}
