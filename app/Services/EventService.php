@@ -61,4 +61,33 @@ class EventService
 
         return;
     }
+
+    public function calculateDiscount(array $cart): float
+    {
+        // Check if the cart is empty
+        if (empty($cart)) {
+            throw new \Exception('The cart cannot be empty.');
+        }
+
+        $total = 0;
+
+        // Calculate the total price
+        foreach ($cart as $item) {
+            $this->validateCartItem($item);
+            $total += $item['price'] * $item['quantity'];
+        }
+
+        // Determine the discount rate based on the total price
+        $discountRate = $total > 100 ? 0.1 : 0.05;
+        $discount = $total * $discountRate;
+
+        return $total - $discount;
+    }
+
+    private function validateCartItem(array $item): void
+    {
+        if (empty($item['price']) || empty($item['quantity']) || $item['price'] <= 0 || $item['quantity'] <= 0) {
+            throw new \Exception('Each cart item must have a positive price and quantity.');
+        }
+    }
 }
